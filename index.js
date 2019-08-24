@@ -31,6 +31,7 @@ let commandHandler;
       mongo.init(),
       rtm.start(),
     ]);
+
     commandHandler = new CommandHandler(mongo);
     const jiraIssueWorker = new JiraIssueWorker(mongo, rtm);
     setInterval(() => {
@@ -44,4 +45,24 @@ let commandHandler;
   }
 
   console.log(`Run main process ${process.pid}`);
+
+  /*
+  * Stop
+  */
+  process.on('SIGTERM', () => {
+    console.log('Received SIGTERM, shutting down gracefully');
+
+    mongo.close().then(() => {
+      console.log('Closed out remaining connections');
+      process.exit();
+    }).catch((err) => {
+      console.log('Connection not close properly', err.message);
+      process.exit(1);
+    });
+
+    setTimeout(() => {
+      console.log('Could not close connections in time, forcing shut down');
+      process.exit(1);
+    }, 10000);
+  });
 })();
