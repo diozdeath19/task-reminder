@@ -1,0 +1,25 @@
+{
+  "jira": {
+    "issueStatuses": {
+      "open": "Открыть",
+      "working": "В работе",
+      "codeReview": "Code Review",
+      "testReady": "Test ready",
+      "testing": "Testing",
+      "mergeReady": "Merge ready",
+      "inRelease": "In Release",
+      "staging": "staging",
+      "production": "production",
+      "done": "Готово"
+    },
+    "url": "url",
+    "user": "user",
+    "token": "token"
+  },
+  "slackToken": "slackToken",
+  "mongo": {
+    "url": "mongodb://localhost:27017",
+    "dbName": "dbName"
+  },
+  "pollingInterval": "60"
+}

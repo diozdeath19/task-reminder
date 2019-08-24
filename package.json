@@ -1,17 +1,22 @@
 {
   "name": "task-reminder",
   "version": "1.0.0",
-  "description": "Slack bot which reminds status of tasks",
+  "description": "Slack bot which reminds status of jira issues",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-dev": "NODE_ENV=development node index.js",
+    "start-prod": "NODE_ENV=production node index.js",
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/diozdeath19/task-reminder.git"
   },
   "keywords": [
-    "slack-bot"
+    "slack-bot",
+    "jira",
+    "jira-issue-reminder",
+    "jira-issue"
   ],
   "author": "diozdeath19@gmail.com",
   "license": "ISC",
@@ -24,8 +29,9 @@
   },
   "dependencies": {
     "@slack/rtm-api": "5.0.2",
+    "axios": "0.19.0",
     "bluebird": "3.5.5",
-    "dotenv": "8.0.0",
+    "config": "3.2.2",
     "mongodb": "3.3.0"
   }
 }

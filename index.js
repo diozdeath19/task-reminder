@@ -1,16 +1,16 @@
-require('dotenv').config();
-
+const config = require('config');
 const { RTMClient } = require('@slack/rtm-api');
 const Promise = require('bluebird');
-const Mongo = require('./server/mongo');
-const CommandHandler = require('./server/command_handler');
+const Mongo = require('./lib/mongo');
+const CommandHandler = require('./lib/command_handler');
+const JiraIssueWorker = require('./lib/jira_issue_worker');
 
 let commandHandler;
 
 (async () => {
-  const token = process.env.SLACK_TOKEN;
+  const token = config.get('slackToken');
   const rtm = new RTMClient(token);
-  const mongo = new Mongo({url: process.env.MONGO_URL, dbName: process.env.MONGO_DB_NAME});
+  const mongo = new Mongo({url: config.get('mongo.url'), dbName: config.get('mongo.dbName')});
 
   rtm.on('message', (event) => {
     commandHandler.handle(event).then(() => {
@@ -29,6 +29,12 @@ let commandHandler;
       rtm.start(),
     ]);
     commandHandler = new CommandHandler(mongo);
+    const jiraIssueWorker = new JiraIssueWorker(mongo, rtm);
+    setInterval(() => {
+      jiraIssueWorker.process().catch(err => {
+        console.log(err.message);
+      });
+    }, config.get('pollingInterval') * 1000);
   } catch (err) {
     console.log(err.message);
     process.exit(1);
