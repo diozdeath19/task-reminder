@@ -13,7 +13,10 @@ let commandHandler;
   const mongo = new Mongo({url: config.get('mongo.url'), dbName: config.get('mongo.dbName')});
 
   rtm.on('message', (event) => {
-    commandHandler.handle(event).then(() => {
+    commandHandler.handle(event).then((res) => {
+      if (res) {
+        return rtm.sendMessage(res, event.channel);
+      }
       return rtm.sendMessage('Accepted', event.channel);
     }).catch((err) => {
       console.log(err.message);
